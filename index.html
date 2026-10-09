@@ -244,6 +244,26 @@ body.menu-open .drawer-nav li{opacity:1;transform:none;transition-delay:calc(var
 .vol-row{display:flex;align-items:center;gap:12px;margin-top:16px;max-width:300px;
   font:500 12px 'IBM Plex Sans','Noto Sans TC',sans-serif;letter-spacing:.1em;color:var(--sub);}
 .vol-row .vol{flex:1;}
+.music-hint{
+  position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:50;
+  display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 32px);
+  padding:4px 4px 4px 16px;border-radius:999px;border:1px solid var(--line);
+  background:var(--nav-bg);color:var(--ink);
+  font:500 13.5px/1.2 'IBM Plex Sans','Noto Sans TC',sans-serif;letter-spacing:.03em;
+  box-shadow:0 8px 28px rgba(0,0,0,.08);
+  opacity:0;transform:translate(-50%,12px);transition:opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1);
+}
+.music-hint.show{opacity:1;transform:translate(-50%,0);}
+.music-hint[hidden]{display:none;}
+.music-hint > svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;}
+.music-hint button{
+  width:44px;height:44px;flex:none;border-radius:999px;border:0;background:transparent;color:var(--sub);
+  display:grid;place-items:center;cursor:pointer;
+}
+.music-hint button:hover{color:var(--ink);}
+.music-hint button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.music-hint button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;}
+@media (prefers-reduced-motion: reduce){ .music-hint{transition:none;} }
 .vol-num{width:2.4em;text-align:right;font-variant-numeric:tabular-nums;}
 
 /* ---------- products ---------- */
@@ -763,6 +783,14 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   <span class="fine">© 2026 · AI-to-life lab</span>
 </footer>
 
+<div class="music-hint" id="musicHint" role="status" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></svg>
+  <span><span data-zh>輕觸畫面，開啟輕柔配樂</span><span data-en>Tap anywhere for soft music</span></span>
+  <button type="button" id="musicHintClose" aria-label="不用了 / No thanks">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</div>
+
 <script>
 (function(){
   var root = document.documentElement;
@@ -1121,13 +1149,19 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
       }
       timer = setTimeout(schedule, 250);
     }
-    function start(){
+    // sec：淡入秒數；peak：淡入後的音量比例（自動播放時刻意小一點）
+    function start(sec, peak){
       if (!AC) return false;
       if (!ac) init();
       ac.resume();
-      var t = ac.currentTime;
-      fade.gain.cancelScheduledValues(t); fade.gain.setValueAtTime(fade.gain.value, t);
-      fade.gain.linearRampToValueAtTime(1, t + 3);
+      sec = sec || 3; peak = peak || 1;
+      var t = ac.currentTime, from = fade.gain.value;
+      fade.gain.cancelScheduledValues(t);
+      // 前段很輕、後段才慢慢明顯的漸強曲線，聽感比直線淡入柔和
+      var n = 64, cv = new Float32Array(n);
+      for (var i = 0; i < n; i++){ var k = i/(n - 1); cv[i] = from + (peak - from)*k*k*k; }
+      try { fade.gain.setValueCurveAtTime(cv, t, sec); }
+      catch(e){ fade.gain.setValueAtTime(from, t); fade.gain.linearRampToValueAtTime(peak, t + sec); }
       on = true;
       if (!timer) schedule();
       return true;
@@ -1147,6 +1181,9 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
     });
     return {
       toggle: function(){ if (on){ stop(); return false; } return start(); },
+      start: start,
+      isOn: function(){ return on; },
+      running: function(){ return !!ac && ac.state === 'running'; },
       setVolume: function(v){
         vol = v;
         if (master) master.gain.setTargetAtTime(curve(v), ac.currentTime, 0.05);
@@ -1155,13 +1192,58 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   })();
 
   var soundBtns = document.querySelectorAll('.js-sound');
+  function setPlaying(playing){
+    soundBtns.forEach(function(x){ x.setAttribute('aria-pressed', playing ? 'true' : 'false'); });
+    root.classList.toggle('sound-on', !!playing);
+  }
+  // 使用者自己按掉過配樂，就記住，不再自動播放
+  var userOff = false;
+  try{ userOff = localStorage.getItem('mc-music') === 'off'; }catch(e){}
   soundBtns.forEach(function(b){
     b.addEventListener('click', function(){
       var playing = Ambience.toggle();
-      soundBtns.forEach(function(x){ x.setAttribute('aria-pressed', playing ? 'true' : 'false'); });
-      root.classList.toggle('sound-on', !!playing);
+      setPlaying(playing);
+      disarm(); autoDone = true;
+      try{ localStorage.setItem('mc-music', playing ? 'on' : 'off'); }catch(e){}
+      if (!playing) userOff = true;
     });
   });
+
+  /* ---------- 往下捲動時自動以 3 秒漸強播放配樂 ----------
+     瀏覽器規定：使用者「點過或按過鍵」之後網頁才能發聲，單純捲動不算。
+     已互動過 → 捲下去直接漸強；只捲動過 → 底部浮出小提示，輕觸任何地方就開始。 */
+  var hint = document.getElementById('musicHint');
+  var autoDone = false, armed = false;
+  function showHint(){ if (hint){ hint.hidden = false; requestAnimationFrame(function(){ hint.classList.add('show'); }); } }
+  function hideHint(){ if (hint){ hint.classList.remove('show'); setTimeout(function(){ hint.hidden = true; }, 500); } }
+  function disarm(){
+    armed = false; hideHint();
+    ['pointerdown','keydown','touchend'].forEach(function(ev){ removeEventListener(ev, onGesture, true); });
+  }
+  function autoStart(){
+    if (autoDone || userOff || Ambience.isOn() && Ambience.running()) return;
+    Ambience.start(3, 0.7);
+    // 確認聲音真的開始了才算完成；被瀏覽器擋下就繼續等下一次輕觸
+    setTimeout(function(){
+      if (Ambience.running()){ autoDone = true; setPlaying(true); disarm(); }
+      else if (!armed){ armed = true; showHint(); ['pointerdown','keydown','touchend'].forEach(function(ev){ addEventListener(ev, onGesture, true); }); }
+    }, 250);
+  }
+  function onGesture(e){
+    if (!armed) return;
+    var t = e.target;
+    if (t && t.closest && (t.closest('.js-sound') || t.closest('#musicHintClose'))) return;  // 交給按鈕自己處理
+    autoStart();
+  }
+  function onScrollArm(){
+    if (autoDone || userOff) { removeEventListener('scroll', onScrollArm); return; }
+    if (scrollY < innerHeight*0.35) return;
+    removeEventListener('scroll', onScrollArm);
+    autoStart();
+  }
+  addEventListener('scroll', onScrollArm, {passive:true});
+  var hintClose = document.getElementById('musicHintClose');
+  if (hintClose) hintClose.addEventListener('click', function(){ userOff = true; disarm(); });
 
   // 音量條（導覽列與側欄同步，記住使用者的設定）
   var vol = 30;
