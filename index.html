@@ -285,6 +285,15 @@ body.menu-open .drawer-nav li{opacity:1;transform:none;transition-delay:calc(var
   transition:transform 1.2s cubic-bezier(.2,.7,.2,1), stroke .4s ease;
 }
 .product-thumb .blot{fill:var(--ink);stroke:none;opacity:.85;transition:transform 1.2s cubic-bezier(.2,.7,.2,1), fill .4s ease;transform-origin:center;transform-box:fill-box;}
+.product-art{
+  display:block;width:92%;aspect-ratio:4/3;background-color:var(--sub);
+  -webkit-mask:var(--art) center/contain no-repeat;mask:var(--art) center/contain no-repeat;
+  transition:transform 1.2s cubic-bezier(.2,.7,.2,1), background-color .4s ease;
+}
+.art-1{--art:url("img/service-01.png");}
+.art-2{--art:url("img/service-02.png");}
+.art-3{--art:url("img/service-03.png");}
+.product-link:hover .product-art{transform:scale(1.04);background-color:var(--accent);}
 .product-link:hover .product-thumb{border-color:var(--accent);transform:translateY(-4px);}
 .product-link:hover .product-thumb svg{transform:scale(1.07) rotate(-1.5deg);stroke:var(--accent);}
 .product-link:hover .product-thumb .blot{transform:scale(1.6);fill:var(--accent);}
@@ -293,7 +302,7 @@ body.menu-open .drawer-nav li{opacity:1;transform:none;transition-delay:calc(var
 [data-lang="en"] .product-name{font-family:'Fraunces',serif;font-weight:500;}
 .product-desc{margin:0;color:var(--sub);font-size:15px;line-height:1.75;max-width:34ch;font-family:'IBM Plex Sans','Noto Sans TC',sans-serif;}
 @media (prefers-reduced-motion: reduce){
-  .product-thumb,.product-thumb svg,.product-thumb .blot{transition:none;}
+  .product-thumb,.product-thumb svg,.product-thumb .blot,.product-art{transition:none;}
 }
 
 /* ---------- ink-drop cursor ---------- */
@@ -584,7 +593,7 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
     <li style="--i:1"><a href="#philosophy"><small>02</small><span data-zh>理念</span><span data-en>Philosophy</span></a></li>
     <li style="--i:2"><a href="#about"><small>03</small><span data-zh>關於我們</span><span data-en>About Us</span></a></li>
     <li style="--i:3"><a href="#method"><small>04</small><span data-zh>我們如何工作</span><span data-en>How We Work</span></a></li>
-    <li style="--i:4"><a href="#products"><small>05</small><span data-zh>產品展示</span><span data-en>Products</span></a></li>
+    <li style="--i:4"><a href="#products"><small>05</small><span data-zh>我們提供的服務</span><span data-en>What We Offer</span></a></li>
     <li style="--i:5"><a href="#contact"><small>06</small><span data-zh>聯絡我們</span><span data-en>Contact</span></a></li>
   </ul>
   <div class="drawer-settings">
@@ -706,56 +715,42 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   </section>
 
   <section class="wrap rule-top" id="products">
-    <p class="method-head reveal" data-zh>產品展示 · Products</p>
-    <p class="method-head reveal" data-en>Products</p>
-    <p class="products-intro reveal" data-zh>每一件作品，都是我們在生活的留白處，放下的一次 AI 實驗。</p>
-    <p class="products-intro reveal" data-en>Each piece is an AI experiment, set down in one of everyday life's quiet spaces.</p>
+    <p class="method-head reveal" data-zh>我們提供的服務 · What We Offer</p>
+    <p class="method-head reveal" data-en>What We Offer</p>
+    <p class="products-intro reveal" data-zh>每一項服務，都從生活的留白處出發。</p>
+    <p class="products-intro reveal" data-en>Each one begins in one of everyday life's quiet spaces.</p>
     <ul class="product-grid">
-      <!-- 以下三張為示意卡片：請替換成實際的產品名稱、說明與連結 -->
       <li class="product reveal">
         <a class="product-link" href="#contact">
           <div class="product-thumb" aria-hidden="true">
-            <svg viewBox="0 0 200 150">
-              <circle cx="100" cy="75" r="12"/><circle cx="100" cy="75" r="28"/>
-              <circle cx="100" cy="75" r="46"/><circle cx="100" cy="75" r="64" stroke-dasharray="3 7"/>
-              <circle class="blot" cx="100" cy="75" r="5"/>
-            </svg>
+            <span class="product-art art-1"></span>
           </div>
-          <span class="product-tag"><span data-zh>即將推出</span><span data-en>Coming soon</span></span>
-          <h3 class="product-name"><span data-zh>產品名稱 01</span><span data-en>Product 01</span></h3>
-          <p class="product-desc" data-zh>用一兩句話說明這件產品，在生活的哪一個留白處發生作用。</p>
-          <p class="product-desc" data-en>One or two lines on where in everyday life this product quietly takes place.</p>
+          <span class="product-tag"><span data-zh>給品牌</span><span data-en>For brands</span></span>
+          <h3 class="product-name"><span data-zh>AI 品味測評</span><span data-en>Taste Tests</span></h3>
+          <p class="product-desc" data-zh>AI 眼中的你，和真實的你，差多少？</p>
+          <p class="product-desc" data-en>How does AI see you — and how far is that from who you are?</p>
         </a>
       </li>
       <li class="product reveal">
         <a class="product-link" href="#contact">
           <div class="product-thumb" aria-hidden="true">
-            <svg viewBox="0 0 200 150">
-              <path d="M78 42 L92 30 L100 38 L108 30 L122 42"/>
-              <path d="M56 84 L78 62 L100 82 L122 62 L144 84"/>
-              <path d="M30 128 L66 92 L100 120 L134 92 L170 128"/>
-              <circle class="blot" cx="100" cy="120" r="4"/>
-            </svg>
+            <span class="product-art art-2"></span>
           </div>
-          <span class="product-tag"><span data-zh>實驗中</span><span data-en>In the lab</span></span>
-          <h3 class="product-name"><span data-zh>產品名稱 02</span><span data-en>Product 02</span></h3>
-          <p class="product-desc" data-zh>用一兩句話說明這件產品，在生活的哪一個留白處發生作用。</p>
-          <p class="product-desc" data-en>One or two lines on where in everyday life this product quietly takes place.</p>
+          <span class="product-tag"><span data-zh>給團隊</span><span data-en>For teams</span></span>
+          <h3 class="product-name"><span data-zh>AI 導入顧問</span><span data-en>Advisory</span></h3>
+          <p class="product-desc" data-zh>先傾聽，再陪你慢慢走。慢，反而更快。</p>
+          <p class="product-desc" data-en>We listen first, then walk with you. Slow is often faster.</p>
         </a>
       </li>
       <li class="product reveal">
         <a class="product-link" href="#contact">
           <div class="product-thumb" aria-hidden="true">
-            <svg viewBox="0 0 200 150">
-              <path d="M30 40 H170 M30 62 H170 M30 84 H170 M30 106 H170" stroke-dasharray="1 11"/>
-              <path d="M40 112 C70 60 96 116 120 74 S158 52 168 36"/>
-              <circle class="blot" cx="120" cy="74" r="6"/>
-            </svg>
+            <span class="product-art art-3"></span>
           </div>
-          <span class="product-tag"><span data-zh>概念階段</span><span data-en>Concept</span></span>
-          <h3 class="product-name"><span data-zh>產品名稱 03</span><span data-en>Product 03</span></h3>
-          <p class="product-desc" data-zh>用一兩句話說明這件產品，在生活的哪一個留白處發生作用。</p>
-          <p class="product-desc" data-en>One or two lines on where in everyday life this product quietly takes place.</p>
+          <span class="product-tag"><span data-zh>給個人</span><span data-en>For individuals</span></span>
+          <h3 class="product-name"><span data-zh>說夢課</span><span data-en>Dream, Told Well</span></h3>
+          <p class="product-desc" data-zh>把夢想說動聽，讓人相信它會成真。</p>
+          <p class="product-desc" data-en>Tell your dream so well that others believe it.</p>
         </a>
       </li>
     </ul>
