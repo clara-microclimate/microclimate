@@ -470,16 +470,21 @@ main,footer{position:relative;z-index:1;}
   letter-spacing:.08em;
 }
 /* 一筆畫出的小圖騰，進入視窗時才「落筆」 */
-.glyph{width:96px;height:48px;overflow:visible;}
-.glyph path,.glyph circle{
-  fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+.glyph{width:56px;height:56px;overflow:visible;}
+.glyph .k,.glyph .t{
+  fill:none;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;
   stroke-dasharray:1;stroke-dashoffset:1;
   transition:stroke-dashoffset 1.8s cubic-bezier(.65,0,.25,1);
 }
+.glyph .k{stroke:var(--logo-ink);}
+.glyph .t{stroke:var(--logo-teal);}
 .glyph .late{transition-delay:.9s;}
-.method-item.in-view .glyph path,.method-item.in-view .glyph circle{stroke-dashoffset:0;}
+.glyph .dot{fill:var(--logo-teal);opacity:0;transform:translateY(-10px);transform-box:fill-box;transition:opacity .8s ease 1.1s, transform .8s cubic-bezier(.2,.7,.2,1) 1.1s;}
+.method-item.in-view .glyph .k,.method-item.in-view .glyph .t{stroke-dashoffset:0;}
+.method-item.in-view .glyph .dot{opacity:1;transform:none;}
 @media (prefers-reduced-motion: reduce){
-  .glyph path,.glyph circle{stroke-dashoffset:0;transition:none;}
+  .glyph .k,.glyph .t{stroke-dashoffset:0;transition:none;}
+  .glyph .dot{opacity:1;transform:none;transition:none;}
 }
 .method-title{margin:0 0 12px;font-size:clamp(22px,2.4vw,28px);font-weight:600;}
 .method-title.en{font-weight:500;}
@@ -493,7 +498,14 @@ main,footer{position:relative;z-index:1;}
   font-size:clamp(34px,6.4vw,78px);max-width:16ch;text-wrap:balance;
 }
 .closing-line.zh{font-weight:700;}
-.closing-links{display:flex;flex-wrap:wrap;column-gap:32px;row-gap:12px;}
+.closing-links{display:flex;flex-wrap:wrap;align-items:center;column-gap:16px;row-gap:12px;}
+.social-link{
+  display:inline-grid;align-items:center;justify-items:start;width:44px;height:44px;margin-top:26px;position:relative;top:3px;
+  color:var(--sub);border-radius:6px;transition:color .3s ease, transform .3s ease;
+}
+.social-link svg{width:22px;height:22px;fill:currentColor;}
+.social-link:hover{color:var(--accent);transform:translateY(-2px);}
+.social-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .closing-link{
   display:inline-flex;align-items:center;gap:10px;margin-top:26px;
   font-size:15px;letter-spacing:.03em;color:var(--accent);text-decoration:none;
@@ -674,9 +686,9 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
       <li class="method-item reveal">
         <div class="method-top">
           <span class="method-num">01</span>
-          <svg class="glyph" viewBox="0 0 120 60" aria-hidden="true">
-            <path pathLength="1" d="M8 30 C30 6 90 6 112 30 C90 54 30 54 8 30"/>
-            <circle class="late" pathLength="1" cx="60" cy="30" r="9"/>
+          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="k" pathLength="1" d="M5 32 Q32 6 59 32 Q32 58 5 32Z"/>
+            <circle class="t late" pathLength="1" cx="32" cy="32" r="7"/>
           </svg>
         </div>
         <h3 class="method-title zh" data-zh>察</h3>
@@ -687,10 +699,9 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
       <li class="method-item reveal">
         <div class="method-top">
           <span class="method-num">02</span>
-          <svg class="glyph" viewBox="0 0 120 60" aria-hidden="true">
-            <path pathLength="1" d="M6 52 L114 52"/>
-            <path class="late" pathLength="1" d="M60 4 C66 16 52 24 60 38"/>
-            <circle class="late" pathLength="1" cx="60" cy="45" r="5"/>
+          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="k" pathLength="1" d="M5 50 L20 35 L32 47 L44 35 L59 50"/>
+            <circle class="dot" cx="32" cy="22" r="6"/>
           </svg>
         </div>
         <h3 class="method-title zh" data-zh>駐</h3>
@@ -701,9 +712,9 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
       <li class="method-item reveal">
         <div class="method-top">
           <span class="method-num">03</span>
-          <svg class="glyph" viewBox="0 0 120 60" aria-hidden="true">
-            <path pathLength="1" d="M6 42 C24 12 42 12 58 32 S94 56 114 18"/>
-            <path class="late" pathLength="1" d="M20 54 C44 46 76 50 100 44"/>
+          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="k" pathLength="1" d="M44 6 L56 18 L28 46 L14 50 L18 36 Z"/>
+            <path class="t late" pathLength="1" d="M6 58 L16 50 L24 56 L34 48 L44 56"/>
           </svg>
         </div>
         <h3 class="method-title zh" data-zh>繪</h3>
@@ -760,12 +771,10 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
     <p class="closing-line zh reveal" data-zh>以科技，<br>設計生活的<span class="nw">微氣候。</span></p>
     <p class="closing-line en reveal" data-en>Designing small climates<br>of change.</p>
     <div class="closing-links">
-      <a class="closing-link reveal" href="https://www.linkedin.com/company/microclimate-ai" target="_blank" rel="noopener noreferrer">
-        <span data-zh>在 LinkedIn 上關注我們</span><span data-en>Follow us on LinkedIn</span> →
+      <a class="social-link reveal" href="https://www.linkedin.com/company/microclimate-ai" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
       </a>
-      <a class="closing-link reveal" href="mailto:support@microclimate.info">
-        <span data-zh>與我們聯絡</span><span data-en>Get in touch</span> →
-      </a>
+      <a class="closing-link reveal" href="mailto:support@microclimate.info">support@microclimate.info</a>
     </div>
   </section>
 </main>
