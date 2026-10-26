@@ -203,6 +203,8 @@ body.menu-open .drawer-nav li{opacity:1;transform:none;transition-delay:calc(var
 
 /* ---------- drawer settings ---------- */
 .drawer-settings{margin-top:32px;}
+/* 桌機導覽列已有這些設定，只在手機的選單中顯示 */
+@media (min-width:561px){ .drawer-settings{display:none;} }
 .drawer-settings .drawer-label{display:block;margin-bottom:14px;}
 .chips{display:flex;flex-wrap:wrap;gap:10px;}
 .chip{
@@ -404,6 +406,9 @@ main,footer{position:relative;z-index:1;}
   .scroll-cue .drip::after{animation:none;top:0;}
 }
 
+/* 區塊小標題用 h2（無障礙層級），外觀維持小字標籤 */
+h2.eyebrow,h2.method-head{font-weight:400;line-height:inherit;}
+
 /* ---------- ink reveal ---------- */
 .ink-section .eyebrow{
   font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);
@@ -582,7 +587,7 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
         <input class="vol js-vol" type="range" min="0" max="100" value="30" aria-label="音量 / Volume">
       </span>
     </div>
-    <button class="icon-btn theme-btn js-theme" id="themeToggle" type="button" aria-label="切換日夜模式 / Toggle dark mode">
+    <button class="icon-btn theme-btn js-theme" id="themeToggle" type="button" aria-pressed="false" aria-label="夜間模式 / Dark mode">
       <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
       <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
     </button>
@@ -594,7 +599,7 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
 </nav>
 
 <div class="scrim" id="scrim" aria-hidden="true"></div>
-<aside class="drawer" id="drawer" aria-label="選單 Menu">
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="選單 Menu">
   <div class="drawer-head">
     <span class="drawer-brand">
       <svg class="logo" aria-hidden="true"><use href="#mcLogo"/></svg>
@@ -619,7 +624,7 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17"/></svg>
         <span data-l="zh">中</span> / <span data-l="en">EN</span>
       </button>
-      <button class="chip js-theme" type="button" aria-label="切換日夜模式 / Toggle dark mode">
+      <button class="chip js-theme" type="button" aria-pressed="false" aria-label="夜間模式 / Dark mode">
         <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
         <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
         <span data-zh>日 / 夜</span><span data-en>Day / Night</span>
@@ -660,8 +665,8 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   </section>
 
   <section class="ink-section wrap rule-top" id="philosophy">
-    <p class="eyebrow reveal" data-zh>理念</p>
-    <p class="eyebrow reveal" data-en>Philosophy</p>
+    <h2 class="eyebrow reveal" data-zh>理念</h2>
+    <h2 class="eyebrow reveal" data-en>Philosophy</h2>
     <div class="reveal-block reveal" id="revealBlock">
       <p class="reveal-text zh" data-zh>如同水墨，<br>最重要的往往，<span class="nw">是留白之處。</span></p>
       <p class="reveal-text en" data-en>Like ink painting,<br>the most important part is often what's left unpainted.</p>
@@ -674,15 +679,15 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   </section>
 
   <section class="wrap rule-top" id="about">
-    <p class="method-head reveal" data-zh>關於我們</p>
-    <p class="method-head reveal" data-en>About Us</p>
+    <h2 class="method-head reveal" data-zh>關於我們</h2>
+    <h2 class="method-head reveal" data-en>About Us</h2>
     <p class="about-text zh reveal" data-zh>起源於一群人看見<span class="nw">垃圾場的環境，</span><span class="nw">想要改變而延伸的行動。</span></p>
     <p class="about-text en reveal" data-en>It began with a group of people who saw what a landfill had become — and a wish to change it that grew into action.</p>
   </section>
 
   <section class="wrap rule-top" id="method">
-    <p class="method-head reveal" data-zh>我們如何工作</p>
-    <p class="method-head reveal" data-en>How We Work</p>
+    <h2 class="method-head reveal" data-zh>我們如何工作</h2>
+    <h2 class="method-head reveal" data-en>How We Work</h2>
     <ul class="method-list">
       <li class="method-item reveal">
         <div class="method-top">
@@ -727,8 +732,8 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   </section>
 
   <section class="wrap rule-top" id="products">
-    <p class="method-head reveal" data-zh>我們提供的服務</p>
-    <p class="method-head reveal" data-en>What We Offer</p>
+    <h2 class="method-head reveal" data-zh>我們提供的服務</h2>
+    <h2 class="method-head reveal" data-en>What We Offer</h2>
     <p class="products-intro reveal" data-zh>每一項服務，都從生活的留白處出發。</p>
     <p class="products-intro reveal" data-en>Each one begins in one of everyday life's quiet spaces.</p>
     <ul class="product-grid">
@@ -769,8 +774,8 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   </section>
 
   <section class="wrap rule-top closing" id="contact">
-    <p class="method-head reveal" data-zh>聯絡我們</p>
-    <p class="method-head reveal" data-en>Contact</p>
+    <h2 class="method-head reveal" data-zh>聯絡我們</h2>
+    <h2 class="method-head reveal" data-en>Contact</h2>
     <p class="closing-line zh reveal" data-zh>以科技，<br>設計生活的<span class="nw">微氣候。</span></p>
     <p class="closing-line en reveal" data-en>Designing small climates<br>of change.</p>
     <div class="closing-links">
@@ -964,10 +969,16 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   /* ---------- day / night with ink-spread transition ---------- */
   var themeMeta = document.getElementById('themeColor');
   var inking = false;
+  function syncThemeBtns(){
+    var dark = root.dataset.theme === 'dark';
+    document.querySelectorAll('.js-theme').forEach(function(b){ b.setAttribute('aria-pressed', dark ? 'true' : 'false'); });
+  }
+  syncThemeBtns();
   function applyTheme(t){
     root.dataset.theme = t;
     themeMeta.content = t === 'dark' ? '#15140F' : '#F6F3EA';
     try{ localStorage.setItem('mc-theme', t); }catch(e){}
+    syncThemeBtns();
     window.dispatchEvent(new Event('mc-theme'));
   }
   function inkTransition(next, ox, oy){
@@ -1278,15 +1289,19 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
   var scrim = document.getElementById('scrim');
   var menuBtn = document.getElementById('menuBtn');
   var menuClose = document.getElementById('menuClose');
+  // 選單開啟時，背後的頁面暫時不可操作（含讀螢幕軟體）
+  var behind = document.querySelectorAll('body > .skip, body > .nav, body > main, body > footer');
   drawer.setAttribute('inert','');
   function openMenu(){
     document.body.classList.add('menu-open');
     drawer.removeAttribute('inert');
+    behind.forEach(function(el){ el.setAttribute('inert',''); });
     menuBtn.setAttribute('aria-expanded','true');
     setTimeout(function(){ menuClose.focus(); }, 60);
   }
   function closeMenu(returnFocus){
     document.body.classList.remove('menu-open');
+    behind.forEach(function(el){ el.removeAttribute('inert'); });
     drawer.setAttribute('inert','');
     menuBtn.setAttribute('aria-expanded','false');
     if (returnFocus) menuBtn.focus();
@@ -1301,7 +1316,7 @@ footer .fine{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans',sans-
     if (!document.body.classList.contains('menu-open')) return;
     if (e.key === 'Escape'){ closeMenu(true); return; }
     if (e.key === 'Tab'){
-      var f = drawer.querySelectorAll('a[href],button');
+      var f = Array.from(drawer.querySelectorAll('a[href],button:not([disabled]),input:not([disabled])')).filter(function(el){ return el.offsetParent !== null; });
       var first = f[0], last = f[f.length-1];
       if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
