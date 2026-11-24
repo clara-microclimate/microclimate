@@ -1,0 +1,121 @@
+---
+// 配色分享頁：點色塊複製色碼、下載 CSS、複製連結
+import Base from '../layouts/Base.astro';
+import { BRAND, SITE_URL, base, path as langPath, breadcrumbJsonLd } from '../site.js';
+import { PALETTE, paletteCss } from '../palette.js';
+
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const url = langPath(lang, 'palette/');
+const title = (zh ? '微氣候配色' : 'Microclimate Palette') + (zh ? '｜' : ' | ') + BRAND[lang].name;
+const description = zh
+  ? '微氣候 Microclimate 的品牌配色：宣紙、墨、赭金與山嵐青。點一下就能複製色碼，也可以下載 CSS 變數檔，歡迎自由使用。'
+  : 'The Microclimate color palette — rice paper, ink, ochre and mountain teal. Click to copy any hex code or download the CSS variables. Free to use.';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: SITE_URL + url,
+    inLanguage: zh ? 'zh-Hant' : 'en',
+    publisher: { '@id': SITE_URL + '/#organization' },
+  },
+  breadcrumbJsonLd([
+    { name: BRAND[lang].name, url: base(lang) },
+    { name: zh ? '配色' : 'Palette', url },
+  ]),
+];
+const groups = [
+  ['light', zh ? '日間' : 'Day'],
+  ['dark', zh ? '夜間' : 'Night'],
+];
+const css = paletteCss();
+const L = {
+  copied: zh ? '已複製' : 'Copied',
+  linkCopied: zh ? '連結已複製' : 'Link copied',
+};
+---
+<Base lang={lang} page="palette" title={title} description={description}
+  alternates={{ zh: '/palette/', en: '/en/palette/' }} ogImage="/og/palette.png" jsonLd={jsonLd}>
+  <header class="wrap page-head">
+    <p class="eyebrow reveal">Palette</p>
+    <h1 class="page-title reveal">{zh ? '微氣候的顏色' : 'The colors of Microclimate'}</h1>
+    <p class="page-intro reveal">{zh
+      ? '取自水墨與留白：宣紙的米白、墨色、赭金，和一抹山嵐的青。點一下色塊即可複製色碼。'
+      : 'Drawn from ink painting and empty space: rice-paper white, ink, ochre, and a breath of mountain teal. Click any swatch to copy its hex code.'}</p>
+  </header>
+
+  <section class="wrap page-body" style="padding-top:0" data-copied={L.copied} data-link-copied={L.linkCopied}>
+    {groups.map(([key, label]) => (
+      <div class="palette-group">
+        <h2 class="method-head reveal">{label}</h2>
+        <ul class="swatches">
+          {PALETTE[key].map((c) => (
+            <li class="reveal">
+              <button class="swatch" type="button" data-hex={c.hex} aria-label={`${c[lang][0]} ${c.hex}`}>
+                <span class="swatch-chip" style={`background:${c.hex}`}></span>
+                <span class="swatch-info">
+                  <span class="swatch-name">{c[lang][0]}</span>
+                  <span class="swatch-role">{c[lang][1]}</span>
+                  <span class="swatch-hex">{c.hex}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    <div class="palette-actions">
+      <a class="btn primary" href="/microclimate-palette.css" download="microclimate-palette.css">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        {zh ? '下載 CSS' : 'Download CSS'}
+      </a>
+      <button class="btn js-share" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+        {zh ? '複製連結分享' : 'Copy link to share'}
+      </button>
+    </div>
+    <pre class="palette-code reveal"><code>{css}</code></pre>
+    <p class="palette-note reveal">{zh
+      ? <>歡迎自由使用這組配色。如果你在作品裡用到了，標註「Microclimate 微氣候」並附上 <a href="https://microclimate.info/palette/">microclimate.info</a> 的連結，就是對我們最好的支持。</>
+      : <>This palette is free to use. If it ends up in your work, a credit to “Microclimate” with a link to <a href="https://microclimate.info/en/palette/">microclimate.info</a> means a lot to us.</>}</p>
+  </section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</Base>
+
+<script>
+  const box = document.querySelector('[data-copied]');
+  const toast = document.getElementById('toast');
+  let timer;
+  function say(msg) {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove(); return ok;
+    }
+  }
+  document.querySelectorAll('.swatch').forEach((b) => {
+    b.addEventListener('click', async () => {
+      const hex = b.getAttribute('data-hex');
+      if (await copy(hex)) {
+        b.classList.add('copied');
+        setTimeout(() => b.classList.remove('copied'), 1200);
+        say(`${box?.getAttribute('data-copied')} ${hex}`);
+      }
+    });
+  });
+  document.querySelector('.js-share')?.addEventListener('click', async () => {
+    if (await copy(location.href)) say(box?.getAttribute('data-link-copied') || '');
+  });
+</script>

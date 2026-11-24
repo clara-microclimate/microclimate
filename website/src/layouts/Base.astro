@@ -1,0 +1,228 @@
+---
+// 全站共用版型：<head> 的 SEO 設定、導覽列、側欄選單、墨雲背景、頁尾、配樂提示
+import '../styles/site.css';
+import '../styles/pages.css';
+import {
+  SITE_URL, SOCIAL, DEFAULT_OG, HTML_LANG, OG_LOCALE, BRAND, UI, base, path as langPath,
+  orgJsonLd, websiteJsonLd,
+} from '../site.js';
+
+const {
+  lang = 'zh',
+  title,
+  description,
+  page = 'page',            // 'home' | 'blog' | 'post' | 'about' | 'palette'
+  alternates,              // { zh: '/xxx/', en: '/en/xxx/' }，某語言沒有對應頁面就給 null
+  langFallback,            // 另一個語言沒有對應頁面時，語言按鈕要跳去哪裡
+  ogImage = DEFAULT_OG,
+  ogType = 'website',
+  jsonLd = [],
+  noindex = false,
+} = Astro.props;
+
+const t = UI[lang];
+const other = lang === 'zh' ? 'en' : 'zh';
+const canonical = SITE_URL + Astro.url.pathname;
+const pageTitle = title || BRAND[lang].title;
+const pageDesc = description || BRAND[lang].description;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : SITE_URL + ogImage;
+const alt = alternates || { [lang]: Astro.url.pathname };
+const switchHref = alt[other] || langFallback || base(other);
+const home = base(lang);
+const ld = [orgJsonLd(lang), websiteJsonLd(), ...jsonLd];
+const navItems = [
+  ['home', home + '#top'],
+  ['philosophy', home + '#philosophy'],
+  ['about', home + '#about'],
+  ['method', home + '#method'],
+  ['products', home + '#products'],
+  ['blog', langPath(lang, 'blog/')],
+  ['contact', home + '#contact'],
+];
+const fontsHref = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,440;9..144,560;9..144,620&family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&family=IBM+Plex+Sans:wght@400;500&display=swap';
+---
+<!DOCTYPE html>
+<html lang={HTML_LANG[lang]} data-lang={lang}>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{pageTitle}</title>
+<meta name="description" content={pageDesc}>
+{noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
+{!noindex && alt.zh && <link rel="alternate" hreflang="zh-Hant" href={SITE_URL + alt.zh}>}
+{!noindex && alt.en && <link rel="alternate" hreflang="en" href={SITE_URL + alt.en}>}
+{!noindex && alt.zh && <link rel="alternate" hreflang="x-default" href={SITE_URL + alt.zh}>}
+<link rel="alternate" type="application/rss+xml" title={BRAND[lang].name} href={langPath(lang, 'rss.xml')}>
+<meta name="theme-color" content="#F6F3EA" id="themeColor">
+<script is:inline>
+/* 有 JS 才隱藏 .reveal 內容，JS 失敗時內容仍可見 */
+document.documentElement.classList.add('js');
+/* 先決定日夜模式，避免載入時閃一下 */
+(function(){
+  var t = null;
+  try{ t = localStorage.getItem('mc-theme'); }catch(e){}
+  if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.dataset.theme = t;
+  document.querySelector('#themeColor').content = t === 'dark' ? '#15140F' : '#F6F3EA';
+})();
+</script>
+
+<meta property="og:type" content={ogType}>
+<meta property="og:site_name" content="微氣候 Microclimate">
+<meta property="og:title" content={pageTitle}>
+<meta property="og:description" content={pageDesc}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={ogImageUrl}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content={OG_LOCALE[lang]}>
+<meta property="og:locale:alternate" content={OG_LOCALE[other]}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={pageTitle}>
+<meta name="twitter:description" content={pageDesc}>
+<meta name="twitter:image" content={ogImageUrl}>
+<slot name="head" />
+
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="icon" type="image/svg+xml" href="/logo_300x300_rounded.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- 字型非阻塞載入：先用系統字型顯示，字型下載完再替換 -->
+<link rel="preload" as="style" href={fontsHref} onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href={fontsHref}></noscript>
+
+{ld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+</head>
+<body data-page={page}>
+
+<a class="skip" href="#main">{t.skip}</a>
+
+<nav class="nav">
+  <a class="nav-mark" href={home} aria-label="微氣候 Microclimate">
+    <svg class="logo play" id="navLogo" viewBox="10 22 280 268" aria-hidden="true">
+      <path class="lg-ink"  pathLength="1" stroke-width="15" d="M105 62 L128 39 L150 59 L172 39 L195 62"/>
+      <path class="lg-ink"  pathLength="1" stroke-width="17" d="M64 156 L108 111 L150 151 L192 111 L236 156"/>
+      <path class="lg-teal" pathLength="1" stroke-width="21" d="M20 276 L95 196 L150 250 L205 196 L280 276"/>
+    </svg>
+    <span class="nav-word">
+      <span class="zh">微氣候</span>
+      <span class="en">MICROCLIMATE</span>
+    </span>
+  </a>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="mcLogo" viewBox="10 22 280 268">
+      <path class="lg-ink"  stroke-width="15" d="M105 62 L128 39 L150 59 L172 39 L195 62"/>
+      <path class="lg-ink"  stroke-width="17" d="M64 156 L108 111 L150 151 L192 111 L236 156"/>
+      <path class="lg-teal" stroke-width="21" d="M20 276 L95 196 L150 250 L205 196 L280 276"/>
+    </symbol>
+  </svg>
+  <div class="nav-actions">
+    <a class="lang-toggle" href={switchHref} hreflang={HTML_LANG[other]} aria-label={lang === 'zh' ? 'Switch to English' : '切換為中文'}>
+      <span data-l="zh">中</span> / <span data-l="en">EN</span>
+    </a>
+    <div class="sound-ctl">
+      <button class="icon-btn sound-btn js-sound" id="soundToggle" type="button" aria-pressed="false" aria-label={lang === 'zh' ? '輕柔配樂 開／關' : 'Soft music on/off'}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <g class="wv"><path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></g>
+        </svg>
+      </button>
+      <span class="vol-wrap">
+        <input class="vol js-vol" type="range" min="0" max="100" value="30" aria-label={t.volume}>
+      </span>
+    </div>
+    <button class="icon-btn theme-btn js-theme" id="themeToggle" type="button" aria-pressed="false" aria-label={lang === 'zh' ? '夜間模式' : 'Dark mode'}>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-controls="drawer" aria-expanded="false" aria-label={lang === 'zh' ? '開啟選單' : 'Open menu'}>
+      <span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+</nav>
+
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label={t.menu}>
+  <div class="drawer-head">
+    <span class="drawer-brand">
+      <svg class="logo" aria-hidden="true"><use href="#mcLogo"/></svg>
+      <span class="drawer-label">{t.menu}</span>
+    </span>
+    <button class="icon-btn close-btn" id="menuClose" type="button" aria-label={lang === 'zh' ? '關閉選單' : 'Close menu'}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+  </div>
+  <ul class="drawer-nav">
+    {navItems.map(([key, href], i) => (
+      <li style={`--i:${i}`}><a href={href}><small>{String(i + 1).padStart(2, '0')}</small><span>{t.nav[key]}</span></a></li>
+    ))}
+  </ul>
+  <div class="drawer-settings">
+    <span class="drawer-label">{t.prefs}</span>
+    <div class="chips">
+      <a class="chip" href={switchHref} hreflang={HTML_LANG[other]}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17"/></svg>
+        <span data-l="zh">中</span> / <span data-l="en">EN</span>
+      </a>
+      <button class="chip js-theme" type="button" aria-pressed="false" aria-label={lang === 'zh' ? '夜間模式' : 'Dark mode'}>
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <span>{t.dayNight}</span>
+      </button>
+      <button class="chip sound-btn js-sound" type="button" aria-pressed="false" aria-label={lang === 'zh' ? '輕柔配樂 開／關' : 'Soft music on/off'}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></svg>
+        <span>{t.music}</span>
+        <span class="state"><span class="off">OFF</span><span class="on">ON</span></span>
+      </button>
+    </div>
+    <label class="vol-row">
+      <span class="vol-label">{t.volume}</span>
+      <input class="vol js-vol" type="range" min="0" max="100" value="30" aria-label={t.volume}>
+      <span class="vol-num" aria-hidden="true">30</span>
+    </label>
+  </div>
+</aside>
+
+<!-- 全頁背景：墨雲 + 山稜，隨捲動變化 -->
+<canvas class="ink-sky" id="inkSky" aria-hidden="true"></canvas>
+<svg class="ridges" id="ridges" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <path class="ridge r1 lg-ink"  pathLength="1" d="M0 150 L120 110 L210 140 L330 90 L450 135 L560 100 L690 145 L800 95 L930 130 L1050 85 L1180 135 L1300 100 L1440 140"/>
+  <path class="ridge r2 lg-ink"  pathLength="1" d="M0 240 L150 180 L280 225 L420 165 L560 230 L700 175 L850 235 L990 170 L1130 225 L1280 180 L1440 230"/>
+  <path class="ridge r3 lg-teal" pathLength="1" d="M0 345 L200 260 L330 315 L520 225 L700 320 L880 240 L1040 310 L1230 230 L1440 330"/>
+</svg>
+
+<main id="main">
+  <slot />
+</main>
+
+<footer class="wrap rule-top">
+  <span class="foot-brand">
+    <svg class="logo" aria-hidden="true"><use href="#mcLogo"/></svg>
+    <span class="zh">微氣候 Microclimate</span>
+  </span>
+  <nav class="foot-links" aria-label={lang === 'zh' ? '頁尾連結' : 'Footer'}>
+    <a href={langPath(lang, 'about/')}>{t.footer.about}</a>
+    <a href={langPath(lang, 'blog/')}>{t.footer.blog}</a>
+    <a href={langPath(lang, 'palette/')}>{t.footer.palette}</a>
+    <a href={langPath(lang, 'rss.xml')}>{t.footer.rss}</a>
+  </nav>
+  <span class="fine">© 2026 · AI-to-life lab</span>
+</footer>
+
+<div class="music-hint" id="musicHint" role="status" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></svg>
+  <span>{t.musicHint}</span>
+  <button type="button" id="musicHintClose" aria-label={lang === 'zh' ? '不用了' : 'No thanks'}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</div>
+
+<script>
+  import '../scripts/site.js';
+</script>
+</body>
+</html>

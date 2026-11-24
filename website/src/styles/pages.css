@@ -1,0 +1,176 @@
+/* ============================================================
+   新頁面（關於、文章、配色）與多語網址需要的樣式
+   首頁原本的樣式都在 site.css，這裡只做補充
+   ============================================================ */
+
+/* 語言切換改成連結，外觀維持原本的按鈕 */
+a.lang-toggle{display:inline-flex;align-items:center;gap:.3em;text-decoration:none;}
+a.chip{text-decoration:none;}
+
+/* ---------- footer links ---------- */
+.foot-links{display:flex;flex-wrap:wrap;gap:6px 22px;font:500 13px 'IBM Plex Sans','Noto Sans TC',sans-serif;letter-spacing:.04em;}
+.foot-links a{color:var(--sub);text-decoration:none;padding:12px 0;transition:color .2s ease;}
+.foot-links a:hover{color:var(--accent);}
+.foot-links a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* ---------- 內頁標題區 ---------- */
+.page-head{padding-top:clamp(140px,18vw,190px);padding-bottom:clamp(40px,6vw,64px);}
+.page-head .eyebrow{
+  font:500 13px 'IBM Plex Sans',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;
+}
+.page-title{
+  margin:0;font-weight:600;line-height:1.12;letter-spacing:-.005em;
+  font-family:'Noto Serif TC','Fraunces',serif;font-size:clamp(38px,6.4vw,76px);text-wrap:balance;max-width:20ch;
+}
+[data-lang="en"] .page-title{font-family:'Fraunces',serif;font-weight:440;}
+.page-intro{
+  margin:24px 0 0;max-width:40ch;color:var(--sub);line-height:1.65;
+  font-family:'Noto Serif TC','Fraunces',serif;font-size:clamp(17px,1.9vw,21px);
+}
+.page-body{padding-top:clamp(48px,7vw,80px);}
+
+/* ---------- 文章列表 ---------- */
+.post-list{list-style:none;margin:0;padding:0;}
+.post-item{border-top:1px solid var(--line);}
+.post-item:last-child{border-bottom:1px solid var(--line);}
+.post-link{
+  display:grid;grid-template-columns:minmax(120px,180px) 1fr;gap:clamp(16px,4vw,48px);
+  padding:clamp(26px,4vw,40px) 0;text-decoration:none;color:inherit;
+}
+@media (max-width:640px){ .post-link{grid-template-columns:1fr;gap:10px;} }
+.post-date{font:500 13px 'IBM Plex Sans',sans-serif;letter-spacing:.08em;color:var(--sub);padding-top:.5em;}
+.post-name{
+  margin:0 0 10px;font-family:'Noto Serif TC','Fraunces',serif;font-weight:600;
+  font-size:clamp(22px,2.6vw,30px);line-height:1.3;transition:color .25s ease;
+}
+[data-lang="en"] .post-name{font-family:'Fraunces',serif;font-weight:500;}
+.post-desc{margin:0;color:var(--sub);font-size:15.5px;line-height:1.75;max-width:60ch;font-family:'IBM Plex Sans','Noto Sans TC',sans-serif;}
+.post-link:hover .post-name{color:var(--accent);}
+.post-link:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
+.post-empty{color:var(--sub);font-size:17px;border-top:1px solid var(--line);padding-top:32px;}
+
+/* ---------- 單篇文章 ---------- */
+.article{max-width:720px;}
+.article-meta{
+  display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:26px;
+  font:500 13px 'IBM Plex Sans','Noto Sans TC',sans-serif;letter-spacing:.04em;color:var(--sub);
+}
+.article-cover{margin:clamp(32px,5vw,48px) 0 0;}
+.article-cover img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:3px;}
+
+.summary-box{
+  margin:0 0 clamp(36px,5vw,52px);padding:24px 26px;border:1px solid var(--line);border-left:3px solid var(--accent);
+  background:color-mix(in srgb, var(--veil) 70%, transparent);border-radius:3px;
+}
+.summary-box h2{margin:0 0 12px;font:500 12px 'IBM Plex Sans',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);}
+.summary-box ul{margin:0;padding-left:1.2em;}
+.summary-box li{margin:.35em 0;line-height:1.7;}
+
+/* 文章內文排版 */
+.prose{font-size:17.5px;line-height:1.9;color:var(--ink);font-weight:400;font-family:'Noto Sans TC','IBM Plex Sans',sans-serif;}
+[data-lang="en"] .prose{font-family:'IBM Plex Sans',sans-serif;line-height:1.75;}
+.prose > *:first-child{margin-top:0;}
+.prose p{margin:0 0 1.3em;}
+.prose h2,.prose h3{font-family:'Noto Serif TC','Fraunces',serif;font-weight:600;line-height:1.35;scroll-margin-top:90px;}
+[data-lang="en"] .prose h2,[data-lang="en"] .prose h3{font-family:'Fraunces',serif;font-weight:500;}
+.prose h2{font-size:clamp(24px,2.8vw,30px);margin:2.2em 0 .7em;}
+.prose h3{font-size:clamp(20px,2.2vw,23px);margin:1.8em 0 .6em;}
+.prose a{color:var(--accent);text-underline-offset:3px;}
+.prose ul,.prose ol{margin:0 0 1.3em;padding-left:1.4em;}
+.prose li{margin:.3em 0;}
+.prose blockquote{
+  margin:1.6em 0;padding:4px 0 4px 22px;border-left:2px solid var(--accent);color:var(--sub);
+  font-family:'Noto Serif TC','Fraunces',serif;font-size:1.08em;
+}
+.prose img{display:block;max-width:100%;height:auto;margin:1.6em 0;border-radius:3px;}
+.prose hr{border:0;border-top:1px solid var(--line);margin:2.4em 0;}
+.prose code{font-size:.9em;background:var(--veil);border:1px solid var(--line);border-radius:4px;padding:.1em .35em;}
+.prose pre{overflow-x:auto;background:var(--veil);border:1px solid var(--line);border-radius:4px;padding:16px;line-height:1.6;}
+.prose pre code{background:none;border:0;padding:0;}
+.prose table{width:100%;border-collapse:collapse;margin:1.6em 0;font-size:.94em;display:block;overflow-x:auto;}
+.prose th,.prose td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;}
+.prose th{font-weight:500;color:var(--sub);}
+
+/* 常見問題 */
+.faq{margin-top:clamp(48px,7vw,72px);border-top:1px solid var(--line);padding:32px 0 0;}
+.faq > h2{margin:0 0 18px;font:500 13px 'IBM Plex Sans',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);}
+.faq details{border-bottom:1px solid var(--line);}
+.faq summary{
+  cursor:pointer;list-style:none;padding:18px 32px 18px 0;position:relative;
+  font-family:'Noto Serif TC','Fraunces',serif;font-weight:600;font-size:18px;line-height:1.5;
+}
+[data-lang="en"] .faq summary{font-family:'Fraunces',serif;font-weight:500;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:"+";position:absolute;right:4px;top:16px;color:var(--accent);font:300 22px 'IBM Plex Sans',sans-serif;transition:transform .3s ease;}
+.faq details[open] summary::after{transform:rotate(45deg);}
+.faq summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.faq details p{margin:0 0 20px;color:var(--sub);line-height:1.8;}
+
+.article-foot{margin-top:clamp(48px,7vw,72px);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;
+  font:500 14px 'IBM Plex Sans','Noto Sans TC',sans-serif;}
+.article-foot a{color:var(--accent);text-decoration:none;padding:12px 0;}
+.article-foot a:hover{text-decoration:underline;text-underline-offset:4px;}
+
+/* YouTube：先顯示縮圖，點了才載入播放器（加快載入、保護隱私） */
+.yt{position:relative;margin:0 0 clamp(36px,5vw,52px);aspect-ratio:16/9;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#000;}
+.yt img,.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;}
+.yt-play{
+  position:absolute;inset:0;display:grid;place-items:center;border:0;background:rgba(0,0,0,.18);cursor:pointer;color:#fff;
+  transition:background .25s ease;
+}
+.yt-play:hover{background:rgba(0,0,0,.05);}
+.yt-play:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;}
+.yt-play span{
+  display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;
+  background:rgba(21,20,15,.78);font:500 14px 'IBM Plex Sans','Noto Sans TC',sans-serif;letter-spacing:.04em;
+}
+.yt-play svg{width:14px;height:14px;fill:currentColor;}
+
+/* ---------- 關於頁 ---------- */
+.about-block + .about-block{margin-top:clamp(64px,10vw,110px);}
+.about-block h2{margin:0 0 28px;}
+
+/* ---------- 配色頁 ---------- */
+.palette-group + .palette-group{margin-top:clamp(56px,8vw,88px);}
+.palette-group h2{margin:0 0 28px;}
+.swatches{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media (max-width:640px){ .swatches{grid-template-columns:repeat(2,1fr);} }
+.swatch{
+  display:flex;flex-direction:column;width:100%;padding:0;text-align:left;cursor:pointer;
+  border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--bg);color:var(--ink);
+  font:inherit;transition:border-color .2s ease, transform .3s cubic-bezier(.2,.7,.2,1);
+}
+.swatch:hover{border-color:var(--accent);transform:translateY(-3px);}
+.swatch:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.swatch-chip{display:block;height:96px;border-bottom:1px solid var(--line);}
+.swatch-info{display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px;}
+.swatch-name{font:500 14px 'IBM Plex Sans','Noto Sans TC',sans-serif;}
+.swatch-role{font-size:12.5px;color:var(--sub);font-family:'IBM Plex Sans','Noto Sans TC',sans-serif;}
+.swatch-hex{font:500 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.04em;color:var(--sub);margin-top:6px;}
+.swatch.copied .swatch-hex{color:var(--accent);}
+
+.palette-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(48px,7vw,72px);}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 20px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--ink);text-decoration:none;
+  font:500 14px 'IBM Plex Sans','Noto Sans TC',sans-serif;letter-spacing:.03em;transition:border-color .2s ease, color .2s ease;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+.palette-note{margin:28px 0 0;color:var(--sub);font-size:15px;line-height:1.75;max-width:52ch;font-family:'IBM Plex Sans','Noto Sans TC',sans-serif;}
+.palette-note a{color:var(--accent);}
+.palette-code{
+  margin:20px 0 0;overflow-x:auto;background:var(--veil);border:1px solid var(--line);border-radius:4px;padding:18px;
+  font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);
+}
+.toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:60;
+  padding:12px 18px;border-radius:999px;border:1px solid var(--line);background:var(--nav-bg);color:var(--ink);
+  font:500 13.5px 'IBM Plex Sans','Noto Sans TC',sans-serif;
+  opacity:0;transform:translate(-50%,10px);transition:opacity .3s ease, transform .3s ease;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+@media (prefers-reduced-motion: reduce){ .swatch,.toast{transition:none;} }

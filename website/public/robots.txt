@@ -1,0 +1,18 @@
+# 歡迎搜尋引擎與 AI 助理讀取本站
+User-agent: *
+Allow: /
+
+# AI 搜尋與助理（明確允許）
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://microclimate.info/sitemap-index.xml

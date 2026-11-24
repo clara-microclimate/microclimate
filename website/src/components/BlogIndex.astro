@@ -1,0 +1,60 @@
+---
+// 文章列表頁
+import Base from '../layouts/Base.astro';
+import { UI, BRAND, SITE_URL, base, formatDate, breadcrumbJsonLd } from '../site.js';
+import { getPosts, slugOf, postUrl } from '../blog.js';
+
+const { lang } = Astro.props;
+const t = UI[lang].blog;
+const posts = await getPosts(lang);
+const url = lang === 'en' ? '/en/blog/' : '/blog/';
+const title = t.title + (lang === 'en' ? ' | ' : '｜') + BRAND[lang].name;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `${BRAND[lang].name} — ${t.title}`,
+    description: t.intro,
+    url: SITE_URL + url,
+    inLanguage: lang === 'en' ? 'en' : 'zh-Hant',
+    publisher: { '@id': SITE_URL + '/#organization' },
+    blogPost: posts.map((p) => ({
+      '@type': 'BlogPosting',
+      headline: p.data.title,
+      url: SITE_URL + postUrl(lang, slugOf(p)),
+      datePublished: p.data.date.toISOString(),
+    })),
+  },
+  breadcrumbJsonLd([
+    { name: BRAND[lang].name, url: base(lang) },
+    { name: t.title, url },
+  ]),
+];
+---
+<Base lang={lang} page="blog" title={title} description={t.intro}
+  alternates={{ zh: '/blog/', en: '/en/blog/' }} jsonLd={jsonLd}>
+  <header class="wrap page-head">
+    <p class="eyebrow reveal">Journal</p>
+    <h1 class="page-title reveal">{t.title}</h1>
+    <p class="page-intro reveal">{t.intro}</p>
+  </header>
+  <section class="wrap page-body" style="padding-top:0">
+    {posts.length === 0 && <p class="post-empty reveal">{t.empty}</p>}
+    {posts.length > 0 && (
+      <ul class="post-list">
+        {posts.map((p) => (
+          <li class="post-item reveal">
+            <a class="post-link" href={postUrl(lang, slugOf(p))}>
+              <time class="post-date" datetime={p.data.date.toISOString().slice(0, 10)}>{formatDate(p.data.date, lang)}</time>
+              <div>
+                <h2 class="post-name">{p.data.draft ? (lang === 'en' ? '[Draft] ' : '［草稿］') : ''}{p.data.title}</h2>
+                <p class="post-desc">{p.data.description}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>

@@ -1,0 +1,9 @@
+# 內部資料：不上傳（repo 目前是公開的）
+notes/
+archive/
+visual/
+
+# 系統檔
+.DS_Store
+Thumbs.db
+desktop.ini

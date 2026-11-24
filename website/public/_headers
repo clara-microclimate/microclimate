@@ -1,0 +1,22 @@
+# Cloudflare Pages 快取設定
+# 網頁：Cloudflare Pages 預設就是 max-age=0, must-revalidate（每次確認，改完馬上看得到），
+# 所以這裡不另外設 Cache-Control，避免和下面的規則疊在一起
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Astro 產生的 CSS/JS 檔名含雜湊，可以永久快取
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 圖片與圖示：快取一週
+/img/*
+  Cache-Control: public, max-age=604800
+/og/*
+  Cache-Control: public, max-age=604800
+/favicon*
+  Cache-Control: public, max-age=604800
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+/logo_*
+  Cache-Control: public, max-age=604800

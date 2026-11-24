@@ -1,0 +1,146 @@
+---
+// 單篇文章頁：重點摘要、內文、影片、常見問題，以及 Article / FAQ / Video 結構化資料
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { UI, BRAND, SITE_URL, base, formatDate, breadcrumbJsonLd } from '../site.js';
+import { slugOf, postUrl, counterpart } from '../blog.js';
+
+const { entry, lang } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const t = UI[lang].blog;
+const slug = slugOf(entry);
+const url = postUrl(lang, slug);
+const other = await counterpart(entry);
+const otherLang = lang === 'zh' ? 'en' : 'zh';
+const blogUrl = lang === 'en' ? '/en/blog/' : '/blog/';
+const ytThumb = d.youtube ? `https://i.ytimg.com/vi/${d.youtube}/hqdefault.jpg` : null;
+const ogImage = d.cover || ytThumb || undefined;
+const iso = (x) => x.toISOString();
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: d.title,
+  description: d.description,
+  url: SITE_URL + url,
+  mainEntityOfPage: SITE_URL + url,
+  inLanguage: lang === 'en' ? 'en' : 'zh-Hant',
+  datePublished: iso(d.date),
+  dateModified: iso(d.updated || d.date),
+  author: { '@id': SITE_URL + '/#organization' },
+  publisher: { '@id': SITE_URL + '/#organization' },
+  ...(ogImage ? { image: ogImage.startsWith('http') ? ogImage : SITE_URL + ogImage } : {}),
+  ...(d.tags ? { keywords: d.tags.join(', ') } : {}),
+};
+const jsonLd = [
+  article,
+  breadcrumbJsonLd([
+    { name: BRAND[lang].name, url: base(lang) },
+    { name: t.title, url: blogUrl },
+    { name: d.title, url },
+  ]),
+];
+if (d.faq?.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({
+      '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+if (d.youtube) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: d.title,
+    description: d.description,
+    thumbnailUrl: ytThumb,
+    uploadDate: iso(d.date),
+    embedUrl: `https://www.youtube-nocookie.com/embed/${d.youtube}`,
+    contentUrl: `https://www.youtube.com/watch?v=${d.youtube}`,
+  });
+}
+---
+<Base lang={lang} page="post" title={d.title + (lang === 'en' ? ' | ' : '｜') + BRAND[lang].name}
+  description={d.description} ogType="article" ogImage={ogImage}
+  alternates={{ [lang]: url, [otherLang]: other }}
+  langFallback={otherLang === 'en' ? '/en/blog/' : '/blog/'}
+  jsonLd={jsonLd} noindex={d.draft}>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={iso(d.date)}>
+    <meta property="article:modified_time" content={iso(d.updated || d.date)}>
+  </Fragment>
+  <article class="wrap">
+    <header class="page-head article">
+      <p class="eyebrow reveal"><a href={blogUrl} style="color:inherit;text-decoration:none">{t.title}</a></p>
+      <h1 class="page-title reveal">{d.title}</h1>
+      <p class="page-intro reveal">{d.description}</p>
+      <div class="article-meta reveal">
+        <span>{t.published} <time datetime={iso(d.date).slice(0, 10)}>{formatDate(d.date, lang)}</time></span>
+        {d.updated && <span>{t.updated} <time datetime={iso(d.updated).slice(0, 10)}>{formatDate(d.updated, lang)}</time></span>}
+        <span>{t.by} {BRAND[lang].name}</span>
+      </div>
+      {d.cover && (
+        <figure class="article-cover reveal">
+          <img src={d.cover} alt={d.coverAlt || ''} width="1200" height="630" loading="eager" decoding="async">
+        </figure>
+      )}
+    </header>
+
+    <div class="article">
+      {d.summary?.length > 0 && (
+        <aside class="summary-box" aria-label={t.summary}>
+          <h2>{t.summary}</h2>
+          <ul>{d.summary.map((s) => <li>{s}</li>)}</ul>
+        </aside>
+      )}
+
+      {d.youtube && (
+        <div class="yt" data-yt={d.youtube}>
+          <img src={ytThumb} alt="" loading="lazy" decoding="async" width="480" height="360">
+          <button class="yt-play" type="button" aria-label={`${t.watch}：${d.title}`}>
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>{t.watch}</span>
+          </button>
+        </div>
+      )}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {d.faq?.length > 0 && (
+        <section class="faq">
+          <h2>{t.faq}</h2>
+          {d.faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </section>
+      )}
+
+      <div class="article-foot">
+        <a href={blogUrl}>{t.back}</a>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<script>
+  // 點了才換成 YouTube 播放器
+  document.querySelectorAll('.yt').forEach((box) => {
+    const btn = box.querySelector('.yt-play');
+    btn?.addEventListener('click', () => {
+      const id = box.getAttribute('data-yt');
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      f.title = btn.getAttribute('aria-label') || 'YouTube';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    });
+  });
+</script>

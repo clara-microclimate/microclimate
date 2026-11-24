@@ -1,0 +1,77 @@
+---
+// 關於頁：只介紹公司。內容先沿用首頁的文字，之後再補完整文案
+import Base from '../layouts/Base.astro';
+import { BRAND, SITE_URL, base, path as langPath, breadcrumbJsonLd, EMAIL } from '../site.js';
+
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const url = langPath(lang, 'about/');
+const title = (zh ? '關於我們' : 'About Us') + (zh ? '｜' : ' | ') + BRAND[lang].name;
+const description = BRAND[lang].description;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: title,
+    url: SITE_URL + url,
+    inLanguage: zh ? 'zh-Hant' : 'en',
+    about: { '@id': SITE_URL + '/#organization' },
+  },
+  breadcrumbJsonLd([
+    { name: BRAND[lang].name, url: base(lang) },
+    { name: zh ? '關於我們' : 'About Us', url },
+  ]),
+];
+
+const steps = zh
+  ? [
+      ['察', '走進日常場景，辨認出可以留白的縫隙。'],
+      ['駐', '讓 AI 以友善、多元、包容的姿態，暫居於這個空白之中。'],
+      ['繪', '記錄人們與 AI 相遇時，浮現出的未來想像。'],
+    ]
+  : [
+      ['Observe', 'We start inside everyday scenes, reading where a deliberate emptiness could open.'],
+      ['Stage', 'AI is invited to settle into that space — gently, diversely, without forcing itself.'],
+      ['Map', 'We map what surfaces when people and AI meet — the shape of imagined futures.'],
+    ];
+---
+<Base lang={lang} page="about" title={title} description={description}
+  alternates={{ zh: '/about/', en: '/en/about/' }} jsonLd={jsonLd}>
+  <header class="wrap page-head">
+    <p class="eyebrow reveal">{zh ? 'About · 關於' : 'About'}</p>
+    <h1 class="page-title reveal">{zh ? '微氣候是一個 AI 落地生活的實驗室。' : 'Microclimate is an AI-to-life lab.'}</h1>
+    <p class="page-intro reveal">{zh ? '以科技，設計生活的微氣候。' : 'Designing small climates of change for a better everyday.'}</p>
+  </header>
+
+  <section class="wrap rule-top">
+    <div class="about-block">
+      <h2 class="method-head reveal">{zh ? '我們的起點' : 'Where we began'}</h2>
+      <p class={`about-text ${lang} reveal`}>{zh
+        ? '起源於一群人看見垃圾場的環境，想要改變而延伸的行動。'
+        : 'It began with a group of people who saw what a landfill had become — and a wish to change it that grew into action.'}</p>
+    </div>
+    <div class="about-block">
+      <h2 class="method-head reveal">{zh ? '我們相信' : 'What we believe'}</h2>
+      <p class={`mission-quote ${lang} reveal`} style="margin-top:0">{zh
+        ? '如同水墨，最重要的往往是留白之處。我們設計生活中的空白，好讓 AI 以更友善、多元包容的方式嵌入到我們的生活——透過部署 AI 事件在真實生活的場景，進行實驗、測繪人類對未來的想像。'
+        : "Like ink painting, the most important part is often what's left unpainted. Microclimate designs the negative space in everyday life — the deliberate room where AI can settle in, friendly, diverse, and inclusive. Through AI encounters staged in real-world scenarios, we map the human imagination of the future."}</p>
+    </div>
+    <div class="about-block">
+      <h2 class="method-head reveal">{zh ? '我們如何工作' : 'How we work'}</h2>
+      <ul class="method-list">
+        {steps.map(([name, desc], i) => (
+          <li class="method-item reveal in-view">
+            <div class="method-top"><span class="method-num">{String(i + 1).padStart(2, '0')}</span></div>
+            <h3 class={`method-title ${lang}`}>{name}</h3>
+            <p class="method-desc">{desc}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="about-block">
+      <h2 class="method-head reveal">{zh ? '聯絡' : 'Contact'}</h2>
+      <a class="closing-link reveal" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    </div>
+  </section>
+</Base>

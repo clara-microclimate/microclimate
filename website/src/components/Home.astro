@@ -1,0 +1,155 @@
+---
+// 首頁內容。lang = 'zh' 或 'en'，只輸出該語言的文字
+import Base from '../layouts/Base.astro';
+import { SITE_URL, SOCIAL, EMAIL, BRAND } from '../site.js';
+
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+
+const services = [
+  {
+    art: 'art-1',
+    tag: { zh: '給品牌', en: 'For brands' },
+    name: { zh: 'AI 品味測評', en: 'Taste Tests' },
+    desc: { zh: 'AI 眼中的你，和真實的你，差多少？', en: 'How does AI see you — and how far is that from who you are?' },
+  },
+  {
+    art: 'art-2',
+    tag: { zh: '給團隊', en: 'For teams' },
+    name: { zh: 'AI 導入顧問', en: 'Advisory' },
+    desc: { zh: '先傾聽，再陪你慢慢走。慢，反而更快。', en: 'We listen first, then walk with you. Slow is often faster.' },
+  },
+  {
+    art: 'art-3',
+    tag: { zh: '給個人', en: 'For individuals' },
+    name: { zh: '說夢課', en: 'Dream, Told Well' },
+    desc: { zh: '把夢想說動聽，讓人相信它會成真。', en: 'Tell your dream so well that others believe it.' },
+  },
+];
+
+const serviceLd = services.map((s) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.name[lang],
+  description: s.desc[lang],
+  audience: { '@type': 'Audience', audienceType: s.tag[lang] },
+  provider: { '@id': SITE_URL + '/#organization' },
+  url: SITE_URL + (zh ? '/' : '/en/') + '#products',
+}));
+---
+<Base
+  lang={lang}
+  page="home"
+  title={BRAND[lang].title}
+  description={BRAND[lang].description}
+  alternates={{ zh: '/', en: '/en/' }}
+  jsonLd={serviceLd}
+>
+  <section class="hero" id="top">
+    <div class="wrap hero-inner">
+      <p class="eyebrow reveal">{zh ? 'AI 落地生活的實驗室' : 'AN AI-TO-LIFE LAB'}</p>
+      {zh ? <h1 class="brand zh">微氣候</h1> : <h1 class="brand en">Microclimate</h1>}
+      {zh
+        ? <p class="tagline reveal">以科技，設計生活的<span class="nw">微氣候</span>。</p>
+        : <p class="tagline reveal">Designing small climates of change for a better everyday.</p>}
+      <p class="scroll-cue reveal" aria-hidden="true"><span class="drip"></span>SCROLL</p>
+    </div>
+  </section>
+
+  <section class="ink-section wrap rule-top" id="philosophy">
+    <h2 class="eyebrow reveal">{zh ? '理念' : 'Philosophy'}</h2>
+    <div class="reveal-block reveal" id="revealBlock">
+      {zh
+        ? <p class="reveal-text zh">如同水墨，<br>最重要的往往，<span class="nw">是留白之處。</span></p>
+        : <p class="reveal-text en">Like ink painting,<br>the most important part is often what's left unpainted.</p>}
+      <canvas class="reveal-canvas" id="revealCanvas" aria-hidden="true"></canvas>
+    </div>
+    <p class="ink-hint reveal">{zh ? '以游標或指尖拂過，讓墨跡顯影' : 'Brush with your cursor or finger to let the ink surface'}</p>
+    {zh
+      ? <p class="mission-quote zh reveal"><span class="nw">我們設計生活中的空白，</span><span class="nw">好讓 AI 以更友善</span><span class="nw">多元包容的方式</span><span class="nw">嵌入到我們的生活——</span><span class="nw">透過部署 AI 事件</span><span class="nw">在真實生活的場景，</span><span class="nw">進行實驗、</span><span class="nw">測繪人類對未來的想像。</span></p>
+      : <p class="mission-quote en reveal">Microclimate designs the negative space in everyday life — the deliberate room where AI can settle in, friendly, diverse, and inclusive. Through AI encounters staged in real-world scenarios, we map the human imagination of the future.</p>}
+  </section>
+
+  <section class="wrap rule-top" id="about">
+    <h2 class="method-head reveal">{zh ? '關於我們' : 'About Us'}</h2>
+    {zh
+      ? <p class="about-text zh reveal">起源於一群人看見<span class="nw">垃圾場的環境，</span><span class="nw">想要改變而延伸的行動。</span></p>
+      : <p class="about-text en reveal">It began with a group of people who saw what a landfill had become — and a wish to change it that grew into action.</p>}
+  </section>
+
+  <section class="wrap rule-top" id="method">
+    <h2 class="method-head reveal">{zh ? '我們如何工作' : 'How We Work'}</h2>
+    <ul class="method-list">
+      <li class="method-item reveal">
+        <div class="method-top">
+          <span class="method-num">01</span>
+          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="k" pathLength="1" d="M5 32 Q32 6 59 32 Q32 58 5 32Z"/>
+            <circle class="t late" pathLength="1" cx="32" cy="32" r="7"/>
+          </svg>
+        </div>
+        <h3 class={`method-title ${lang}`}>{zh ? '察' : 'Observe'}</h3>
+        <p class="method-desc">{zh ? '走進日常場景，辨認出可以留白的縫隙。' : 'We start inside everyday scenes, reading where a deliberate emptiness could open.'}</p>
+      </li>
+      <li class="method-item reveal">
+        <div class="method-top">
+          <span class="method-num">02</span>
+          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="k" pathLength="1" d="M5 50 L20 35 L32 47 L44 35 L59 50"/>
+            <circle class="dot" cx="32" cy="22" r="6"/>
+          </svg>
+        </div>
+        <h3 class={`method-title ${lang}`}>{zh ? '駐' : 'Stage'}</h3>
+        <p class="method-desc">{zh ? '讓 AI 以友善、多元、包容的姿態，暫居於這個空白之中。' : 'AI is invited to settle into that space — gently, diversely, without forcing itself.'}</p>
+      </li>
+      <li class="method-item reveal">
+        <div class="method-top">
+          <span class="method-num">03</span>
+          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="k" pathLength="1" d="M44 6 L56 18 L28 46 L14 50 L18 36 Z"/>
+            <path class="t late" pathLength="1" d="M6 58 L16 50 L24 56 L34 48 L44 56"/>
+          </svg>
+        </div>
+        <h3 class={`method-title ${lang}`}>{zh ? '繪' : 'Map'}</h3>
+        {zh
+          ? <p class="method-desc">記錄人們與 AI 相遇時，<span class="nw">浮現出的未來想像。</span></p>
+          : <p class="method-desc">We map what surfaces when people and AI meet — the shape of imagined futures.</p>}
+      </li>
+    </ul>
+  </section>
+
+  <section class="wrap rule-top" id="products">
+    <h2 class="method-head reveal">{zh ? '我們提供的服務' : 'What We Offer'}</h2>
+    <p class="products-intro reveal">{zh ? '每一項服務，都從生活的留白處出發。' : "Each one begins in one of everyday life's quiet spaces."}</p>
+    <ul class="product-grid">
+      {services.map((s) => (
+        <li class="product reveal">
+          <a class="product-link" href="#contact">
+            <div class="product-thumb" aria-hidden="true">
+              <span class={`product-art ${s.art}`}></span>
+            </div>
+            <span class="product-tag">{s.tag[lang]}</span>
+            <h3 class="product-name">{s.name[lang]}</h3>
+            <p class="product-desc">{s.desc[lang]}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap rule-top closing" id="contact">
+    <h2 class="method-head reveal">{zh ? '聯絡我們' : 'Contact'}</h2>
+    {zh
+      ? <p class="closing-line zh reveal">以科技，<br>設計生活的<span class="nw">微氣候。</span></p>
+      : <p class="closing-line en reveal">Designing small climates<br>of change.</p>}
+    <div class="closing-links">
+      <a class="social-link reveal" href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a class="social-link reveal" href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a class="closing-link reveal" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    </div>
+  </section>
+</Base>
