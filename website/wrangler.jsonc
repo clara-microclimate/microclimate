@@ -1,0 +1,10 @@
+// Cloudflare Workers 靜態網站設定：把 Astro build 出來的 dist/ 直接當網站
+{
+  "name": "microclimate",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}
