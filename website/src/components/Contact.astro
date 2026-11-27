@@ -1,0 +1,40 @@
+---
+// 聯絡頁：首頁「聯絡我們」區塊的獨立版本
+import Base from '../layouts/Base.astro';
+import ContactLinks from './ContactLinks.astro';
+import { BRAND, SITE_URL, EMAIL, base, path as langPath, breadcrumbJsonLd } from '../site.js';
+
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const url = langPath(lang, 'contact/');
+const title = (zh ? '聯絡我們' : 'Contact') + (zh ? '｜' : ' | ') + BRAND[lang].name;
+const description = zh
+  ? `與微氣候 Microclimate 聯絡：來信 ${EMAIL}，或在 LinkedIn、YouTube 找到我們。`
+  : `Get in touch with Microclimate: email ${EMAIL}, or find us on LinkedIn and YouTube.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: title,
+    description,
+    url: SITE_URL + url,
+    inLanguage: zh ? 'zh-Hant' : 'en',
+    about: { '@id': SITE_URL + '/#organization' },
+  },
+  breadcrumbJsonLd([
+    { name: BRAND[lang].name, url: base(lang) },
+    { name: zh ? '聯絡我們' : 'Contact', url },
+  ]),
+];
+---
+<Base lang={lang} page="contact" title={title} description={description}
+  alternates={{ zh: '/contact/', en: '/en/contact/' }} jsonLd={jsonLd}>
+  <section class="wrap closing" id="contact">
+    <h1 class="method-head reveal">{zh ? '聯絡我們' : 'Contact'}</h1>
+    {zh
+      ? <p class="closing-line zh reveal">以科技，<br>設計生活的<span class="nw">微氣候。</span></p>
+      : <p class="closing-line en reveal">Designing small climates<br>of change.</p>}
+    <ContactLinks />
+  </section>
+</Base>

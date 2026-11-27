@@ -23,8 +23,10 @@ Microclimate (微氣候) works in Traditional Chinese and English. The site is b
 
 - [Home (English)](${SITE_URL}/en/): mission, contact
 - [首頁（中文）](${SITE_URL}/): 理念、聯絡
+- [Philosophy](${SITE_URL}/en/philosophy/) · [理念](${SITE_URL}/philosophy/)
 - [About](${SITE_URL}/en/about/) · [關於](${SITE_URL}/about/)
-- [Journal](${SITE_URL}/en/blog/) · [文章](${SITE_URL}/blog/)
+- [Contact](${SITE_URL}/en/contact/) · [聯絡我們](${SITE_URL}/contact/)
+- [Blog](${SITE_URL}/en/blog/) · [Blog（中文）](${SITE_URL}/blog/)
 - [Color palette](${SITE_URL}/en/palette/) · [配色](${SITE_URL}/palette/)
 
 ## Articles (English)

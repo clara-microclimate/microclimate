@@ -1,0 +1,45 @@
+---
+// 理念頁：首頁「理念」區塊的獨立版本（含墨跡顯影互動）
+import Base from '../layouts/Base.astro';
+import { BRAND, SITE_URL, base, path as langPath, breadcrumbJsonLd } from '../site.js';
+
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const url = langPath(lang, 'philosophy/');
+const title = (zh ? '理念' : 'Philosophy') + (zh ? '｜' : ' | ') + BRAND[lang].name;
+const description = zh
+  ? '如同水墨，最重要的往往是留白之處。微氣候設計生活中的空白，讓 AI 以友善、多元包容的方式嵌入日常。'
+  : "Like ink painting, the most important part is often what's left unpainted. Microclimate designs the negative space where AI can settle into everyday life.";
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: SITE_URL + url,
+    inLanguage: zh ? 'zh-Hant' : 'en',
+    about: { '@id': SITE_URL + '/#organization' },
+  },
+  breadcrumbJsonLd([
+    { name: BRAND[lang].name, url: base(lang) },
+    { name: zh ? '理念' : 'Philosophy', url },
+  ]),
+];
+---
+<Base lang={lang} page="philosophy" title={title} description={description}
+  alternates={{ zh: '/philosophy/', en: '/en/philosophy/' }} jsonLd={jsonLd}>
+  <section class="ink-section wrap" id="philosophy">
+    <h1 class="eyebrow reveal">{zh ? '理念' : 'Philosophy'}</h1>
+    <div class="reveal-block reveal" id="revealBlock">
+      {zh
+        ? <p class="reveal-text zh">如同水墨，<br>最重要的往往，<span class="nw">是留白之處。</span></p>
+        : <p class="reveal-text en">Like ink painting,<br>the most important part is often what's left unpainted.</p>}
+      <canvas class="reveal-canvas" id="revealCanvas" aria-hidden="true"></canvas>
+    </div>
+    <p class="ink-hint reveal">{zh ? '以游標或指尖拂過，讓墨跡顯影' : 'Brush with your cursor or finger to let the ink surface'}</p>
+    {zh
+      ? <p class="mission-quote zh reveal"><span class="nw">我們設計生活中的空白，</span><span class="nw">好讓 AI 以更友善</span><span class="nw">多元包容的方式</span><span class="nw">嵌入到我們的生活——</span><span class="nw">透過部署 AI 事件</span><span class="nw">在真實生活的場景，</span><span class="nw">進行實驗、</span><span class="nw">測繪人類對未來的想像。</span></p>
+      : <p class="mission-quote en reveal">Microclimate designs the negative space in everyday life — the deliberate room where AI can settle in, friendly, diverse, and inclusive. Through AI encounters staged in real-world scenarios, we map the human imagination of the future.</p>}
+  </section>
+</Base>

@@ -49,11 +49,11 @@ export const UI = {
     musicHint: '輕觸畫面，開啟輕柔配樂',
     nav: {
       home: '首頁', philosophy: '理念', about: '關於我們', method: '我們如何工作',
-      products: '我們提供的服務', blog: '文章', contact: '聯絡我們',
+      products: '我們提供的服務', blog: 'Blog', contact: '聯絡我們',
     },
-    footer: { about: '關於', blog: '文章', palette: '配色', rss: 'RSS' },
+    footer: { about: '關於', blog: 'Blog', palette: '配色', rss: 'RSS' },
     blog: {
-      title: '文章',
+      title: 'Blog',
       intro: '來自實驗現場的筆記：我們在真實生活裡部署 AI，看見了什麼。',
       empty: '第一篇文章正在醞釀中，敬請期待。',
       summary: '重點摘要',
@@ -77,11 +77,11 @@ export const UI = {
     musicHint: 'Tap anywhere for soft music',
     nav: {
       home: 'Home', philosophy: 'Philosophy', about: 'About Us', method: 'How We Work',
-      products: 'What We Offer', blog: 'Journal', contact: 'Contact',
+      products: 'What We Offer', blog: 'Blog', contact: 'Contact',
     },
-    footer: { about: 'About', blog: 'Journal', palette: 'Palette', rss: 'RSS' },
+    footer: { about: 'About', blog: 'Blog', palette: 'Palette', rss: 'RSS' },
     blog: {
-      title: 'Journal',
+      title: 'Blog',
       intro: 'Field notes from our experiments: what we see when AI is placed in real everyday life.',
       empty: 'Our first article is on its way.',
       summary: 'Key takeaways',
