@@ -531,7 +531,7 @@
     var W, H;
     var ridges = document.querySelectorAll('.ridge');
     // 每一段落對應一種「天氣」：墨雲的中心、散開程度、濃淡
-    var IDS = ['top','philosophy','about','method','products','contact'];
+    var IDS = ['top','philosophy','contact'];
     var STATES = {
       top:        { cx:.72, cy:.42, sx:.42, sy:.50, a:1.00 },  // 首頁：右側聚雲
       philosophy: { cx:.50, cy:.50, sx:1.30, sy:1.25, a:.30 }, // 理念：雲散開，留白
@@ -610,7 +610,8 @@
         b.oy += ((d ? dy/d : 0)*push - b.oy)*0.06;
         var px = (x + b.ox)*W, py = (y + b.oy)*H, pr = b.r*Math.max(W, H)*0.9;
         var al = b.a*cur.a;
-        var c = b.warm ? (dark ? '199,157,110' : '140,104,66') : (dark ? '236,230,216' : '32,30,26');
+        // 日間用淡金色（燈金 #C79D6E，深一點的用赭金 #8C6842），避免灰墨在米白底上看起來像髒污
+        var c = b.warm ? (dark ? '199,157,110' : '140,104,66') : (dark ? '236,230,216' : '199,157,110');
         var gr = ctx.createRadialGradient(px, py, 0, px, py, pr);
         gr.addColorStop(0, 'rgba('+c+','+al+')');
         gr.addColorStop(0.55, 'rgba('+c+','+(al*0.45)+')');

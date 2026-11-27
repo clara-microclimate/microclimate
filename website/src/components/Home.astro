@@ -1,41 +1,11 @@
 ---
 // 首頁內容。lang = 'zh' 或 'en'，只輸出該語言的文字
 import Base from '../layouts/Base.astro';
-import { SITE_URL, SOCIAL, EMAIL, BRAND } from '../site.js';
+import { SOCIAL, EMAIL, BRAND } from '../site.js';
 
 const { lang } = Astro.props;
 const zh = lang === 'zh';
 
-const services = [
-  {
-    art: 'art-1',
-    tag: { zh: '給品牌', en: 'For brands' },
-    name: { zh: 'AI 品味測評', en: 'Taste Tests' },
-    desc: { zh: 'AI 眼中的你，和真實的你，差多少？', en: 'How does AI see you — and how far is that from who you are?' },
-  },
-  {
-    art: 'art-2',
-    tag: { zh: '給團隊', en: 'For teams' },
-    name: { zh: 'AI 導入顧問', en: 'Advisory' },
-    desc: { zh: '先傾聽，再陪你慢慢走。慢，反而更快。', en: 'We listen first, then walk with you. Slow is often faster.' },
-  },
-  {
-    art: 'art-3',
-    tag: { zh: '給個人', en: 'For individuals' },
-    name: { zh: '說夢課', en: 'Dream, Told Well' },
-    desc: { zh: '把夢想說動聽，讓人相信它會成真。', en: 'Tell your dream so well that others believe it.' },
-  },
-];
-
-const serviceLd = services.map((s) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: s.name[lang],
-  description: s.desc[lang],
-  audience: { '@type': 'Audience', audienceType: s.tag[lang] },
-  provider: { '@id': SITE_URL + '/#organization' },
-  url: SITE_URL + (zh ? '/' : '/en/') + '#products',
-}));
 ---
 <Base
   lang={lang}
@@ -43,7 +13,6 @@ const serviceLd = services.map((s) => ({
   title={BRAND[lang].title}
   description={BRAND[lang].description}
   alternates={{ zh: '/', en: '/en/' }}
-  jsonLd={serviceLd}
 >
   <section class="hero" id="top">
     <div class="wrap hero-inner">
@@ -68,73 +37,6 @@ const serviceLd = services.map((s) => ({
     {zh
       ? <p class="mission-quote zh reveal"><span class="nw">我們設計生活中的空白，</span><span class="nw">好讓 AI 以更友善</span><span class="nw">多元包容的方式</span><span class="nw">嵌入到我們的生活——</span><span class="nw">透過部署 AI 事件</span><span class="nw">在真實生活的場景，</span><span class="nw">進行實驗、</span><span class="nw">測繪人類對未來的想像。</span></p>
       : <p class="mission-quote en reveal">Microclimate designs the negative space in everyday life — the deliberate room where AI can settle in, friendly, diverse, and inclusive. Through AI encounters staged in real-world scenarios, we map the human imagination of the future.</p>}
-  </section>
-
-  <section class="wrap rule-top" id="about">
-    <h2 class="method-head reveal">{zh ? '關於我們' : 'About Us'}</h2>
-    {zh
-      ? <p class="about-text zh reveal">起源於一群人看見<span class="nw">垃圾場的環境，</span><span class="nw">想要改變而延伸的行動。</span></p>
-      : <p class="about-text en reveal">It began with a group of people who saw what a landfill had become — and a wish to change it that grew into action.</p>}
-  </section>
-
-  <section class="wrap rule-top" id="method">
-    <h2 class="method-head reveal">{zh ? '我們如何工作' : 'How We Work'}</h2>
-    <ul class="method-list">
-      <li class="method-item reveal">
-        <div class="method-top">
-          <span class="method-num">01</span>
-          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
-            <path class="k" pathLength="1" d="M5 32 Q32 6 59 32 Q32 58 5 32Z"/>
-            <circle class="t late" pathLength="1" cx="32" cy="32" r="7"/>
-          </svg>
-        </div>
-        <h3 class={`method-title ${lang}`}>{zh ? '察' : 'Observe'}</h3>
-        <p class="method-desc">{zh ? '走進日常場景，辨認出可以留白的縫隙。' : 'We start inside everyday scenes, reading where a deliberate emptiness could open.'}</p>
-      </li>
-      <li class="method-item reveal">
-        <div class="method-top">
-          <span class="method-num">02</span>
-          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
-            <path class="k" pathLength="1" d="M5 50 L20 35 L32 47 L44 35 L59 50"/>
-            <circle class="dot" cx="32" cy="22" r="6"/>
-          </svg>
-        </div>
-        <h3 class={`method-title ${lang}`}>{zh ? '駐' : 'Stage'}</h3>
-        <p class="method-desc">{zh ? '讓 AI 以友善、多元、包容的姿態，暫居於這個空白之中。' : 'AI is invited to settle into that space — gently, diversely, without forcing itself.'}</p>
-      </li>
-      <li class="method-item reveal">
-        <div class="method-top">
-          <span class="method-num">03</span>
-          <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
-            <path class="k" pathLength="1" d="M44 6 L56 18 L28 46 L14 50 L18 36 Z"/>
-            <path class="t late" pathLength="1" d="M6 58 L16 50 L24 56 L34 48 L44 56"/>
-          </svg>
-        </div>
-        <h3 class={`method-title ${lang}`}>{zh ? '繪' : 'Map'}</h3>
-        {zh
-          ? <p class="method-desc">記錄人們與 AI 相遇時，<span class="nw">浮現出的未來想像。</span></p>
-          : <p class="method-desc">We map what surfaces when people and AI meet — the shape of imagined futures.</p>}
-      </li>
-    </ul>
-  </section>
-
-  <section class="wrap rule-top" id="products">
-    <h2 class="method-head reveal">{zh ? '我們提供的服務' : 'What We Offer'}</h2>
-    <p class="products-intro reveal">{zh ? '每一項服務，都從生活的留白處出發。' : "Each one begins in one of everyday life's quiet spaces."}</p>
-    <ul class="product-grid">
-      {services.map((s) => (
-        <li class="product reveal">
-          <a class="product-link" href="#contact">
-            <div class="product-thumb" aria-hidden="true">
-              <span class={`product-art ${s.art}`}></span>
-            </div>
-            <span class="product-tag">{s.tag[lang]}</span>
-            <h3 class="product-name">{s.name[lang]}</h3>
-            <p class="product-desc">{s.desc[lang]}</p>
-          </a>
-        </li>
-      ))}
-    </ul>
   </section>
 
   <section class="wrap rule-top closing" id="contact">

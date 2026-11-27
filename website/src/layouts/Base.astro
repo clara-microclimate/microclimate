@@ -33,9 +33,7 @@ const ld = [orgJsonLd(lang), websiteJsonLd(), ...jsonLd];
 const navItems = [
   ['home', home + '#top'],
   ['philosophy', home + '#philosophy'],
-  ['about', home + '#about'],
-  ['method', home + '#method'],
-  ['products', home + '#products'],
+  ['about', langPath(lang, 'about/')],
   ['blog', langPath(lang, 'blog/')],
   ['contact', home + '#contact'],
 ];
