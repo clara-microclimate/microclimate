@@ -49,11 +49,11 @@ export const UI = {
     musicHint: '輕觸畫面，開啟輕柔配樂',
     nav: {
       home: '首頁', philosophy: '理念', about: '關於我們', method: '我們如何工作',
-      products: '我們提供的服務', blog: 'Blog', contact: '聯絡我們',
+      products: '我們提供的服務', blog: '文章', contact: '聯絡我們',
     },
-    footer: { about: '關於', blog: 'Blog', palette: '配色', rss: 'RSS' },
+    footer: { about: '關於', blog: '文章', palette: '配色', rss: 'RSS' },
     blog: {
-      title: 'Blog',
+      title: '文章',
       intro: '來自實驗現場的筆記：我們在真實生活裡部署 AI，看見了什麼。',
       empty: '第一篇文章正在醞釀中，敬請期待。',
       summary: '重點摘要',
