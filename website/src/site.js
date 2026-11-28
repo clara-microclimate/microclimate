@@ -49,7 +49,7 @@ export const UI = {
     musicHint: '輕觸畫面，開啟輕柔配樂',
     nav: {
       home: '首頁', philosophy: '理念', about: '關於我們', method: '我們如何工作',
-      products: '我們提供的服務', blog: '文章', contact: '聯絡我們',
+      products: '我們提供的服務', services: '服務', blog: '文章', contact: '聯絡我們',
     },
     footer: { about: '關於', blog: '文章', palette: '配色', rss: 'RSS' },
     blog: {
@@ -77,7 +77,7 @@ export const UI = {
     musicHint: 'Tap anywhere for soft music',
     nav: {
       home: 'Home', philosophy: 'Philosophy', about: 'About Us', method: 'How We Work',
-      products: 'What We Offer', blog: 'Blog', contact: 'Contact',
+      products: 'What We Offer', services: 'Services', blog: 'Blog', contact: 'Contact',
     },
     footer: { about: 'About', blog: 'Blog', palette: 'Palette', rss: 'RSS' },
     blog: {

@@ -531,7 +531,7 @@
     var W, H;
     var ridges = document.querySelectorAll('.ridge');
     // 每一段落對應一種「天氣」：墨雲的中心、散開程度、濃淡
-    var IDS = ['top','philosophy','contact'];
+    var IDS = ['top','philosophy','about','method','products','contact'];
     var STATES = {
       top:        { cx:.72, cy:.42, sx:.42, sy:.50, a:1.00 },  // 首頁：右側聚雲
       philosophy: { cx:.50, cy:.50, sx:1.30, sy:1.25, a:.30 }, // 理念：雲散開，留白
